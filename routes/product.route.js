@@ -1,5 +1,6 @@
 const express = require("express");
-const router = express.Router(); //import express router for route handling
+const auth = require("../middleware/auth.middleware");
+const router = express.Router();
 
 const {
   home,
@@ -10,22 +11,14 @@ const {
   deleteProductById,
 } = require("../controllers/product.controller");
 
-// CREATE (put this first)
-router.post("/create", createProduct);
-
-// READ ALL
+// Public routes
+router.get("/", home);
 router.get("/all", getAllProducts);
-
-// READ ONE
 router.get("/:id", getProductById);
 
-// UPDATE
-router.put("/:id", updateProductById);
-
-// DELETE
-router.delete("/:id", deleteProductById);
-
-// HOME (keep this LAST)
-router.get("/", home);
+// Protected routes
+router.post("/create", auth, createProduct);
+router.put("/:id", auth, updateProductById);
+router.delete("/:id", auth, deleteProductById);
 
 module.exports = router;
